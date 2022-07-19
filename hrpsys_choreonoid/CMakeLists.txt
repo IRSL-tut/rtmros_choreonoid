@@ -17,6 +17,7 @@ elseif(COMPILER_SUPPORTS_CXX0X)
 else()
   message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
+add_definitions(-Wno-deprecated)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(hrpsys hrpsys-base REQUIRED)
@@ -57,6 +58,10 @@ if(${cnoid-plugin_FOUND})
   add_library(JAXONCustomizer src/JAXONCustomizer.cpp)
   target_link_libraries(JAXONCustomizer ${cnoid-plugin_LIBRARIES} ${YAML_CPP_LIBRARIES})
   set_target_properties(JAXONCustomizer PROPERTIES COMPILE_FLAG "-fPIC" PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+  ##
+  add_library(SpringCustomizer src/SpringCustomizer.cpp)
+  target_link_libraries(SpringCustomizer ${cnoid-plugin_LIBRARIES} ${YAML_CPP_LIBRARIES})
+  set_target_properties(SpringCustomizer PROPERTIES COMPILE_FLAG "-fPIC" PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
   ##
   add_library(DOORCustomizer src/DOORCustomizer.cpp)
   target_link_libraries(DOORCustomizer ${cnoid-plugin_LIBRARIES})
