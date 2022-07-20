@@ -51,14 +51,6 @@ static BodyInterface* bodyInterface = 0;
 
 static BodyCustomizerInterface bodyCustomizerInterface;
 
-struct JointInfo
-{
-    std::string name;
-    double K;
-    double D;
-    double upper_limit;
-    double lower_limit;
-};
 struct JointValSet
 {
     double* valuePtr;
@@ -99,7 +91,7 @@ static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
 
     std::cerr << "create SpringCustomizer : " << std::string(modelName) << std::endl;
     customizer = new SpringCustomizer;
-
+    customizer->jointValSets.resize(0);
     customizer->bodyHandle = bodyHandle;
 
     char* config_file_path = getenv("SPRING_CUSTOMIZER_CONF_FILE");
@@ -110,7 +102,15 @@ static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
             std::cerr << "[SpringCustomizer] Config file is: " << config_file_path << std::endl;
             YAML::Node param = YAML::LoadFile(config_file_path);
             try {
+                if (!param.IsMap()) {
+		    std::cerr << "[SpringCustomizer] file does not contain a map" << std::endl;
+		    return static_cast<BodyCustomizerHandle>(customizer);
+		}
                 YAML::Node sp_lst = param["springs"];// list
+		if (!sp_lst.IsSequence()) {
+		    std::cerr << "[SpringCustomizer] springs is not a sequence" << std::endl;
+		    return static_cast<BodyCustomizerHandle>(customizer);
+		}
                 for(int i = 0; i < sp_lst.size(); i++) {
                     const YAML::Node &sp = sp_lst[i];
 
@@ -128,7 +128,11 @@ static BodyCustomizerHandle create(BodyHandle bodyHandle, const char* modelName)
                     vs.valuePtr = bodyInterface->getJointValuePtr(bodyHandle, index);
                     vs.velocityPtr = bodyInterface->getJointVelocityPtr(bodyHandle, index);
                     vs.torqueForcePtr = bodyInterface->getJointForcePtr(bodyHandle, index);
-
+		    std::cerr << "[SpringCustomizer] add joint_name: " << vs.name << std::endl;
+		    std::cerr << "[SpringCustomizer]     K: " << vs.K << std::endl;
+		    std::cerr << "[SpringCustomizer]     D: " << vs.D << std::endl;
+		    std::cerr << "[SpringCustomizer]     upper_limit: " << vs.upper_limit << std::endl;
+		    std::cerr << "[SpringCustomizer]     lower_limit: " << vs.lower_limit << std::endl;
                     customizer->jointValSets.push_back(vs);
                 }
             } catch (YAML::Exception &e) {
