@@ -55,9 +55,9 @@ if(${cnoid-plugin_FOUND})
   target_link_libraries(PDcontroller ${openrtm_aist_LIBRARIES} ${cnoid-plugin_LIBRARIES} ${Boost_LIBRARIES} ${hrpsys_LIBRARIES} ${catkin_LIBRARIES})
   set_target_properties(PDcontroller PROPERTIES COMPILE_FLAG "-fPIC" PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
   ##
-  add_library(JAXONCustomizer src/JAXONCustomizer.cpp)
-  target_link_libraries(JAXONCustomizer ${cnoid-plugin_LIBRARIES} ${YAML_CPP_LIBRARIES})
-  set_target_properties(JAXONCustomizer PROPERTIES COMPILE_FLAG "-fPIC" PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+  #add_library(JAXONCustomizer src/JAXONCustomizer.cpp)
+  #target_link_libraries(JAXONCustomizer ${cnoid-plugin_LIBRARIES} ${YAML_CPP_LIBRARIES})
+  #set_target_properties(JAXONCustomizer PROPERTIES COMPILE_FLAG "-fPIC" PREFIX "" SUFFIX ".so" LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
   ##
   add_library(SpringCustomizer src/SpringCustomizer.cpp)
   target_link_libraries(SpringCustomizer ${cnoid-plugin_LIBRARIES} ${YAML_CPP_LIBRARIES})
